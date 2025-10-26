@@ -1,0 +1,48 @@
+# Fotos originales (no subir al repositorio)
+fotos_originales/
+*.jpg
+*.jpeg
+*.png
+*.JPG
+*.JPEG
+*.PNG
+
+# Archivos temporales
+*.tmp
+*.temp
+*.bak
+*~
+
+# Archivos de sistema
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# IDEs y editores
+.vscode/
+.idea/
+*.swp
+*.swo
+*.swn
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+venv/
+env/
+ENV/
+
+# Node (si se usa)
+node_modules/
+package-lock.json
+
+# Logs
+*.log
+logs/
+
+# Build
+dist/
+build/
