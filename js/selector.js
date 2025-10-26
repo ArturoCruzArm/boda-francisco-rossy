@@ -117,14 +117,8 @@ function updateStats() {
 // FEATURED PHOTO FUNCTIONS
 // ========================================
 function updateFeaturedPhoto() {
-    const featuredSection = document.getElementById('featuredPhotoSection');
-    const featuredImage = document.getElementById('featuredPhotoImage');
-    const featuredNumber = document.getElementById('featuredPhotoNumber');
-
-    // Always show ampliacion.webp as the featured photo
-    featuredSection.style.display = 'block';
-    featuredImage.src = 'images/ampliacion.webp';
-    featuredNumber.textContent = 'Fotografía de Ampliación';
+    // Sección de fotografía destacada removida
+    // Esta función ya no hace nada
 }
 
 // ========================================
