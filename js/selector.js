@@ -1,8 +1,8 @@
 // ========================================
 // GLOBAL VARIABLES
 // ========================================
-// Generate photo paths for 88 photos
-const photos = Array.from({length: 88}, (_, i) => `images/foto${String(i + 1).padStart(4, '0')}.webp`);
+// Generate photo paths for 251 photos
+const photos = Array.from({length: 251}, (_, i) => `images/foto${String(i + 1).padStart(4, '0')}.webp`);
 
 // LIMITS FOR FRANCISCO & ROSSY'S WEDDING
 const LIMITS = {
@@ -779,8 +779,8 @@ function addPhotoFeedback() {
         return;
     }
 
-    if (photoNumber < 1 || photoNumber > 88) {
-        showToast('El número de foto debe estar entre 1 y 88', 'error');
+    if (photoNumber < 1 || photoNumber > 251) {
+        showToast('El número de foto debe estar entre 1 y 251', 'error');
         return;
     }
 

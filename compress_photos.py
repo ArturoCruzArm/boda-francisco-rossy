@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+# -*- coding: utf-8 -*-
 """
 Script para comprimir fotos a formato WebP para la boda de Francisco y Rossy.
 
@@ -17,6 +18,12 @@ import os
 import sys
 from pathlib import Path
 from PIL import Image
+
+# Configurar salida UTF-8 para Windows
+if sys.platform == 'win32':
+    import codecs
+    sys.stdout = codecs.getwriter('utf-8')(sys.stdout.buffer, 'strict')
+    sys.stderr = codecs.getwriter('utf-8')(sys.stderr.buffer, 'strict')
 
 def comprimir_imagenes(carpeta_origen, carpeta_destino, calidad=80):
     """
