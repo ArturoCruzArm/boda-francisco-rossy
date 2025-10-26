@@ -37,14 +37,27 @@ def comprimir_imagenes(carpeta_origen, carpeta_destino, calidad=80):
     # Crear carpeta de destino si no existe
     Path(carpeta_destino).mkdir(parents=True, exist_ok=True)
 
-    # Extensiones de imagen soportadas
+    # Extensiones de imagen soportadas (en minúsculas)
     extensiones = {'.jpg', '.jpeg', '.png', '.bmp', '.tiff', '.tif', '.webp'}
 
-    # Obtener lista de archivos de imagen
+    # Obtener lista de archivos de imagen (sin duplicados)
     archivos = []
+    archivos_set = set()  # Para evitar duplicados
+
     for ext in extensiones:
-        archivos.extend(Path(carpeta_origen).glob(f'*{ext}'))
-        archivos.extend(Path(carpeta_origen).glob(f'*{ext.upper()}'))
+        # Buscar con extensión en minúsculas
+        for archivo in Path(carpeta_origen).glob(f'*{ext}'):
+            archivo_lower = str(archivo).lower()
+            if archivo_lower not in archivos_set:
+                archivos.append(archivo)
+                archivos_set.add(archivo_lower)
+
+        # Buscar con extensión en mayúsculas
+        for archivo in Path(carpeta_origen).glob(f'*{ext.upper()}'):
+            archivo_lower = str(archivo).lower()
+            if archivo_lower not in archivos_set:
+                archivos.append(archivo)
+                archivos_set.add(archivo_lower)
 
     # Ordenar archivos
     archivos.sort()
