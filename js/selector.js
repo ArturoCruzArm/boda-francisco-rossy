@@ -274,7 +274,7 @@ function renderGallery() {
 
         card.innerHTML = `
             <div class="photo-image-container">
-                <canvas class="photo-canvas" data-index="${index}"></canvas>
+                <img src="${photo}" alt="Foto ${index + 1}" loading="lazy">
             </div>
             <div class="photo-number">Foto ${index + 1}</div>
             ${badgesHTML}
@@ -282,15 +282,6 @@ function renderGallery() {
 
         card.addEventListener('click', () => openModal(index));
         grid.appendChild(card);
-
-        // Load image to canvas after adding to DOM
-        const canvas = card.querySelector('.photo-canvas');
-        if (canvas) {
-            loadImageToCanvas(photo, canvas, index + 1).catch(err => {
-                console.error(`Error loading photo ${index + 1}:`, err);
-            });
-            disableCanvasInteraction(canvas);
-        }
     });
 
     applyFilter();
@@ -400,20 +391,7 @@ function openModal(index) {
     const modalImage = document.getElementById('modalImage');
     const modalPhotoNumber = document.getElementById('modalPhotoNumber');
 
-    // Convert modalImage to canvas if it's not already
-    if (modalImage.tagName !== 'CANVAS') {
-        const canvas = document.createElement('canvas');
-        canvas.id = 'modalImage';
-        canvas.style.cssText = modalImage.style.cssText;
-        modalImage.parentNode.replaceChild(canvas, modalImage);
-    }
-
-    const modalCanvas = document.getElementById('modalImage');
-    loadImageToCanvas(photos[index], modalCanvas, index + 1).catch(err => {
-        console.error(`Error loading modal photo ${index + 1}:`, err);
-    });
-    disableCanvasInteraction(modalCanvas);
-
+    modalImage.src = photos[index];
     modalPhotoNumber.textContent = `Foto ${index + 1}`;
 
     // Load current selections
@@ -484,12 +462,10 @@ function navigatePhoto(direction) {
 
         if (newIndex !== null) {
             currentPhotoIndex = newIndex;
-            const modalCanvas = document.getElementById('modalImage');
+            const modalImage = document.getElementById('modalImage');
             const modalPhotoNumber = document.getElementById('modalPhotoNumber');
 
-            loadImageToCanvas(photos[newIndex], modalCanvas, newIndex + 1).catch(err => {
-                console.error(`Error loading modal photo ${newIndex + 1}:`, err);
-            });
+            modalImage.src = photos[newIndex];
             modalPhotoNumber.textContent = `Foto ${newIndex + 1}`;
 
             const selection = photoSelections[newIndex] || {};
