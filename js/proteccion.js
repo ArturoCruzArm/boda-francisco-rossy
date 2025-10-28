@@ -5,9 +5,9 @@
 (function() {
     'use strict';
 
-    // Deshabilitar clic derecho en imágenes e iframes
+    // Deshabilitar clic derecho en imágenes, canvas e iframes
     document.addEventListener('contextmenu', function(e) {
-        if (e.target.tagName === 'IMG' || e.target.tagName === 'IFRAME' || e.target.closest('iframe')) {
+        if (e.target.tagName === 'IMG' || e.target.tagName === 'CANVAS' || e.target.tagName === 'IFRAME' || e.target.closest('iframe')) {
             e.preventDefault();
             e.stopPropagation();
             return false;
@@ -34,18 +34,18 @@
         });
     }
 
-    // Deshabilitar arrastrar imágenes
+    // Deshabilitar arrastrar imágenes y canvas
     document.addEventListener('dragstart', function(e) {
-        if (e.target.tagName === 'IMG') {
+        if (e.target.tagName === 'IMG' || e.target.tagName === 'CANVAS') {
             e.preventDefault();
             e.stopPropagation();
             return false;
         }
     }, false);
 
-    // Deshabilitar selección de imágenes
+    // Deshabilitar selección de imágenes y canvas
     document.addEventListener('selectstart', function(e) {
-        if (e.target.tagName === 'IMG') {
+        if (e.target.tagName === 'IMG' || e.target.tagName === 'CANVAS') {
             e.preventDefault();
             e.stopPropagation();
             return false;
@@ -139,7 +139,7 @@
         protegerIframes();
     }
 
-    // Observar cambios en el DOM para proteger imágenes nuevas
+    // Observar cambios en el DOM para proteger imágenes y canvas nuevos
     const observer = new MutationObserver(function(mutations) {
         mutations.forEach(function(mutation) {
             mutation.addedNodes.forEach(function(node) {
@@ -155,6 +155,17 @@
                             e.preventDefault();
                             return false;
                         });
+                    } else if (node.tagName === 'CANVAS') {
+                        const canvas = node;
+                        canvas.addEventListener('contextmenu', function(e) {
+                            e.preventDefault();
+                            return false;
+                        });
+                        canvas.addEventListener('dragstart', function(e) {
+                            e.preventDefault();
+                            return false;
+                        });
+                        canvas.style.userSelect = 'none';
                     } else if (node.querySelector) {
                         const imgs = node.querySelectorAll('img');
                         imgs.forEach(function(img) {
@@ -168,6 +179,18 @@
                                 return false;
                             });
                         });
+                        const canvases = node.querySelectorAll('canvas');
+                        canvases.forEach(function(canvas) {
+                            canvas.addEventListener('contextmenu', function(e) {
+                                e.preventDefault();
+                                return false;
+                            });
+                            canvas.addEventListener('dragstart', function(e) {
+                                e.preventDefault();
+                                return false;
+                            });
+                            canvas.style.userSelect = 'none';
+                        });
                     }
                 }
             });
@@ -180,5 +203,69 @@
         subtree: true
     });
 
-    console.log('Protección de imágenes activada');
+    // ========================================
+    // DETECCIÓN DE DEVTOOLS
+    // ========================================
+    let devtoolsOpen = false;
+
+    // Método 1: Detectar mediante tamaño de ventana
+    function detectDevToolsBySize() {
+        const threshold = 160;
+        const widthThreshold = window.outerWidth - window.innerWidth > threshold;
+        const heightThreshold = window.outerHeight - window.innerHeight > threshold;
+        return widthThreshold || heightThreshold;
+    }
+
+    // Método 2: Detectar mediante performance de console
+    function detectDevToolsByConsole() {
+        let isOpen = false;
+        const start = performance.now();
+
+        // El console.log es mucho más lento cuando DevTools está abierto
+        console.profile('devtools-detect');
+        console.profileEnd('devtools-detect');
+
+        const end = performance.now();
+        if (end - start > 100) {
+            isOpen = true;
+        }
+
+        return isOpen;
+    }
+
+    // Función de advertencia cuando se detecta DevTools
+    function onDevToolsDetected() {
+        if (!devtoolsOpen) {
+            devtoolsOpen = true;
+            console.clear();
+            console.log('%c⚠️ ADVERTENCIA', 'font-size: 30px; color: red; font-weight: bold;');
+            console.log('%cEste sitio está protegido.', 'font-size: 18px; color: orange;');
+            console.log('%cLas fotos tienen marca de agua.', 'font-size: 14px;');
+            console.log('%c💒 Francisco & Rossy', 'font-size: 16px; color: #8b6f47; font-weight: bold;');
+        }
+    }
+
+    // Verificar cada 1 segundo
+    setInterval(function() {
+        if (detectDevToolsBySize()) {
+            onDevToolsDetected();
+        }
+    }, 1000);
+
+    // Protección adicional: Bloquear toDataURL en canvas para dificultar extracción
+    const originalToDataURL = HTMLCanvasElement.prototype.toDataURL;
+    HTMLCanvasElement.prototype.toDataURL = function() {
+        // Permitir la funcionalidad pero registrar el intento
+        console.warn('Intento de extraer datos del canvas detectado');
+        return originalToDataURL.apply(this, arguments);
+    };
+
+    // Protección: Bloquear getImageData
+    const CanvasRenderingContext2D_getImageData = CanvasRenderingContext2D.prototype.getImageData;
+    CanvasRenderingContext2D.prototype.getImageData = function() {
+        console.warn('Intento de extraer pixels del canvas detectado');
+        return CanvasRenderingContext2D_getImageData.apply(this, arguments);
+    };
+
+    console.log('Protección de imágenes activada (Canvas + DevTools Detection)');
 })();

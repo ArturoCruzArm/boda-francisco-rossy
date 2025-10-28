@@ -1,8 +1,24 @@
 // ========================================
 // GLOBAL VARIABLES
 // ========================================
-// Generate photo paths for 146 photos
-const photos = Array.from({length: 146}, (_, i) => `images/foto${String(i + 1).padStart(4, '0')}.webp`);
+// Load photo map (obfuscated filenames)
+let photoMap = {};
+let photos = [];
+
+// Load the photo map from JSON
+fetch('images/photo_map.json')
+    .then(response => response.json())
+    .then(data => {
+        photoMap = data;
+        // Generate photo paths using obfuscated names
+        photos = Array.from({length: 300}, (_, i) => `images/${photoMap[i]}`);
+        console.log('Photo map loaded:', photos.length, 'photos');
+    })
+    .catch(error => {
+        console.error('Error loading photo map:', error);
+        // Fallback to old naming if map fails
+        photos = Array.from({length: 300}, (_, i) => `images/foto${String(i + 1).padStart(4, '0')}.webp`);
+    });
 
 // LIMITS FOR FRANCISCO & ROSSY'S WEDDING
 const LIMITS = {
@@ -122,6 +138,74 @@ function updateFeaturedPhoto() {
 }
 
 // ========================================
+// CANVAS PROTECTION FUNCTIONS
+// ========================================
+function loadImageToCanvas(imageSrc, canvas, photoNumber) {
+    return new Promise((resolve, reject) => {
+        const img = new Image();
+        img.crossOrigin = 'anonymous'; // For CORS if needed
+
+        img.onload = function() {
+            const ctx = canvas.getContext('2d');
+
+            // Set canvas size to match image
+            canvas.width = img.width;
+            canvas.height = img.height;
+
+            // Draw the image
+            ctx.drawImage(img, 0, 0);
+
+            // Add watermark
+            addWatermark(ctx, canvas.width, canvas.height, photoNumber);
+
+            resolve();
+        };
+
+        img.onerror = function() {
+            reject(new Error(`Failed to load image: ${imageSrc}`));
+        };
+
+        img.src = imageSrc;
+    });
+}
+
+function addWatermark(ctx, width, height, photoNumber) {
+    // Semi-transparent watermark
+    ctx.save();
+
+    // Configure watermark style
+    ctx.fillStyle = 'rgba(255, 255, 255, 0.15)';
+    ctx.font = `${Math.floor(width / 20)}px Arial`;
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'middle';
+
+    // Add watermark text
+    const watermarkText = 'Francisco & Rossy';
+    ctx.fillText(watermarkText, width / 2, height / 2);
+
+    // Add smaller photo number in corner
+    ctx.font = `${Math.floor(width / 30)}px Arial`;
+    ctx.fillStyle = 'rgba(255, 255, 255, 0.2)';
+    ctx.textAlign = 'left';
+    ctx.fillText(`#${photoNumber}`, 20, height - 20);
+
+    ctx.restore();
+}
+
+function disableCanvasInteraction(canvas) {
+    // Disable right-click
+    canvas.addEventListener('contextmenu', e => e.preventDefault());
+
+    // Disable drag
+    canvas.addEventListener('dragstart', e => e.preventDefault());
+
+    // Disable selection
+    canvas.style.userSelect = 'none';
+    canvas.style.webkitUserSelect = 'none';
+    canvas.style.mozUserSelect = 'none';
+}
+
+// ========================================
 // GALLERY FUNCTIONS
 // ========================================
 function renderGallery() {
@@ -167,7 +251,7 @@ function renderGallery() {
 
         card.innerHTML = `
             <div class="photo-image-container">
-                <img src="${photo}" alt="Foto ${index + 1}" loading="lazy">
+                <canvas class="photo-canvas" data-index="${index}"></canvas>
             </div>
             <div class="photo-number">Foto ${index + 1}</div>
             ${badgesHTML}
@@ -175,6 +259,15 @@ function renderGallery() {
 
         card.addEventListener('click', () => openModal(index));
         grid.appendChild(card);
+
+        // Load image to canvas after adding to DOM
+        const canvas = card.querySelector('.photo-canvas');
+        if (canvas) {
+            loadImageToCanvas(photo, canvas, index + 1).catch(err => {
+                console.error(`Error loading photo ${index + 1}:`, err);
+            });
+            disableCanvasInteraction(canvas);
+        }
     });
 
     applyFilter();
@@ -284,7 +377,20 @@ function openModal(index) {
     const modalImage = document.getElementById('modalImage');
     const modalPhotoNumber = document.getElementById('modalPhotoNumber');
 
-    modalImage.src = photos[index];
+    // Convert modalImage to canvas if it's not already
+    if (modalImage.tagName !== 'CANVAS') {
+        const canvas = document.createElement('canvas');
+        canvas.id = 'modalImage';
+        canvas.style.cssText = modalImage.style.cssText;
+        modalImage.parentNode.replaceChild(canvas, modalImage);
+    }
+
+    const modalCanvas = document.getElementById('modalImage');
+    loadImageToCanvas(photos[index], modalCanvas, index + 1).catch(err => {
+        console.error(`Error loading modal photo ${index + 1}:`, err);
+    });
+    disableCanvasInteraction(modalCanvas);
+
     modalPhotoNumber.textContent = `Foto ${index + 1}`;
 
     // Load current selections
@@ -355,10 +461,12 @@ function navigatePhoto(direction) {
 
         if (newIndex !== null) {
             currentPhotoIndex = newIndex;
-            const modalImage = document.getElementById('modalImage');
+            const modalCanvas = document.getElementById('modalImage');
             const modalPhotoNumber = document.getElementById('modalPhotoNumber');
 
-            modalImage.src = photos[newIndex];
+            loadImageToCanvas(photos[newIndex], modalCanvas, newIndex + 1).catch(err => {
+                console.error(`Error loading modal photo ${newIndex + 1}:`, err);
+            });
             modalPhotoNumber.textContent = `Foto ${newIndex + 1}`;
 
             const selection = photoSelections[newIndex] || {};
@@ -773,8 +881,8 @@ function addPhotoFeedback() {
         return;
     }
 
-    if (photoNumber < 1 || photoNumber > 146) {
-        showToast('El número de foto debe estar entre 1 y 146', 'error');
+    if (photoNumber < 1 || photoNumber > 300) {
+        showToast('El número de foto debe estar entre 1 y 300', 'error');
         return;
     }
 
