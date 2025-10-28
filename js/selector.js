@@ -4,21 +4,26 @@
 // Load photo map (obfuscated filenames)
 let photoMap = {};
 let photos = [];
+let photosLoaded = false;
 
-// Load the photo map from JSON
-fetch('images/photo_map.json')
-    .then(response => response.json())
-    .then(data => {
-        photoMap = data;
+// Function to load photo map
+async function loadPhotoMap() {
+    try {
+        const response = await fetch('images/photo_map.json');
+        photoMap = await response.json();
         // Generate photo paths using obfuscated names
         photos = Array.from({length: 300}, (_, i) => `images/${photoMap[i]}`);
         console.log('Photo map loaded:', photos.length, 'photos');
-    })
-    .catch(error => {
+        photosLoaded = true;
+        return true;
+    } catch (error) {
         console.error('Error loading photo map:', error);
         // Fallback to old naming if map fails
         photos = Array.from({length: 300}, (_, i) => `images/foto${String(i + 1).padStart(4, '0')}.webp`);
-    });
+        photosLoaded = true;
+        return false;
+    }
+}
 
 // LIMITS FOR FRANCISCO & ROSSY'S WEDDING
 const LIMITS = {
@@ -668,11 +673,14 @@ function showToast(message, type = 'success') {
 // ========================================
 // EVENT LISTENERS
 // ========================================
-document.addEventListener('DOMContentLoaded', () => {
+document.addEventListener('DOMContentLoaded', async () => {
+    // Load photo map FIRST
+    await loadPhotoMap();
+
     // Load saved selections
     loadSelections();
 
-    // Render gallery
+    // Render gallery AFTER photos are loaded
     renderGallery();
 
     // Update stats
