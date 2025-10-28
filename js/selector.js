@@ -153,20 +153,38 @@ function loadImageToCanvas(imageSrc, canvas, photoNumber) {
         img.onload = function() {
             const ctx = canvas.getContext('2d');
 
-            // Set canvas size to match image
-            canvas.width = img.width;
-            canvas.height = img.height;
+            // Get the container size
+            const container = canvas.parentElement;
+            const containerWidth = container.clientWidth;
+            const containerHeight = container.clientHeight;
 
-            // Draw the image
-            ctx.drawImage(img, 0, 0);
+            // Calculate scale to fit image in container
+            const scale = Math.min(
+                containerWidth / img.width,
+                containerHeight / img.height
+            );
+
+            // Set canvas display size (CSS)
+            canvas.style.width = containerWidth + 'px';
+            canvas.style.height = containerHeight + 'px';
+
+            // Set canvas buffer size (actual pixels)
+            const scaledWidth = img.width * scale;
+            const scaledHeight = img.height * scale;
+            canvas.width = scaledWidth;
+            canvas.height = scaledHeight;
+
+            // Draw the image scaled
+            ctx.drawImage(img, 0, 0, scaledWidth, scaledHeight);
 
             // Add watermark
-            addWatermark(ctx, canvas.width, canvas.height, photoNumber);
+            addWatermark(ctx, scaledWidth, scaledHeight, photoNumber);
 
             resolve();
         };
 
-        img.onerror = function() {
+        img.onerror = function(err) {
+            console.error('Error loading image:', imageSrc, err);
             reject(new Error(`Failed to load image: ${imageSrc}`));
         };
 
