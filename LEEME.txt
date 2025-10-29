@@ -1,0 +1,86 @@
+===============================================
+  SELECTOR DE FOTOS - BODA FRANCISCO Y ROSSY
+===============================================
+
+¡BUENAS NOTICIAS! Este sitio web funciona directamente sin servidor.
+Puedes abrirlo localmente o subirlo a GitHub Pages.
+
+================================================
+  CÓMO USAR LOCALMENTE (Más fácil)
+================================================
+
+1. Simplemente abre el archivo:
+   selector.html
+
+2. Haz doble clic en selector.html
+
+3. Se abrirá en tu navegador
+
+4. ¡Listo! El selector debería funcionar correctamente
+
+================================================
+  CÓMO SUBIR A GITHUB PAGES
+================================================
+
+1. Crea un repositorio en GitHub
+
+2. Sube todos los archivos del proyecto:
+   - selector.html
+   - css/
+   - js/
+   - images/
+   - favicon.svg
+
+3. Ve a Settings > Pages en tu repositorio
+
+4. En "Source", selecciona la rama main (o master)
+
+5. Guarda los cambios
+
+6. GitHub te dará una URL como:
+   https://tu-usuario.github.io/nombre-repo/selector.html
+
+7. ¡Listo! Tu selector estará en línea
+
+================================================
+  PROBLEMAS COMUNES
+================================================
+
+❌ Si las fotos no cargan:
+   → Verifica que la carpeta images/ tenga los 300 archivos .webp
+   → Verifica que photo-map.js esté cargado correctamente
+   → Abre la consola del navegador (F12) para ver errores
+
+❌ Si ves "PHOTO_MAP no está definido":
+   → Asegúrate de que photo-map.js se carga ANTES de selector.js
+   → Verifica el orden de los <script> en selector.html
+
+❌ Si el localStorage no funciona:
+   → Algunos navegadores bloquean localStorage en file:///
+   → Solución: Usa GitHub Pages o un servidor local
+
+================================================
+  CARACTERÍSTICAS DEL SELECTOR
+================================================
+
+✓ 300 fotos de la boda
+✓ Selección por categorías:
+  - Ampliación (máximo 1)
+  - Impresión (máximo 80)
+  - Redes Sociales (ilimitado)
+  - Descartar
+✓ Filtros para ver fotos por categoría
+✓ Descarga de reporte en JSON
+✓ Copiar resumen al portapapeles
+✓ Sugerencias de cambios para fotos y video
+✓ Protección anti-descarga de imágenes
+
+================================================
+  SOPORTE TÉCNICO
+================================================
+
+Para dudas o problemas, contacta a:
+Producciones Foro 7
+WhatsApp: 477-920-3776
+
+===============================================

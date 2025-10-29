@@ -237,7 +237,7 @@
     function onDevToolsDetected() {
         if (!devtoolsOpen) {
             devtoolsOpen = true;
-            console.clear();
+            // console.clear(); // Comentado temporalmente para debug
             console.log('%c⚠️ ADVERTENCIA', 'font-size: 30px; color: red; font-weight: bold;');
             console.log('%cEste sitio está protegido.', 'font-size: 18px; color: orange;');
             console.log('%cLas fotos tienen marca de agua.', 'font-size: 14px;');

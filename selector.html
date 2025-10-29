@@ -57,19 +57,19 @@
                     <div class="stat-icon">⭕</div>
                     <div class="stat-info">
                         <h3>Sin Clasificar</h3>
-                        <p class="stat-count" id="countSinClasificar">0</p>
+                        <p class="stat-count" id="countSinClasificar">300</p>
                     </div>
                 </div>
             </div>
 
             <div class="action-buttons">
-                <button class="btn btn-filter" id="btnFilterAll">Todas (0)</button>
+                <button class="btn btn-filter" id="btnFilterAll">Todas (300)</button>
                 <button class="btn btn-filter filter-ampliacion" id="btnFilterAmpliacion">Ampliación (0/1)</button>
                 <button class="btn btn-filter filter-impresion" id="btnFilterImpresion">Impresión (0/80)</button>
                 <button class="btn btn-filter filter-redes-sociales" id="btnFilterRedesSociales">Redes Sociales (0)</button>
                 <button class="btn btn-filter filter-invitacion" id="btnFilterInvitacion" style="display: none;">Invitación (0)</button>
                 <button class="btn btn-filter filter-descartada" id="btnFilterDescartada">Descartadas (0)</button>
-                <button class="btn btn-filter filter-sin-clasificar" id="btnFilterSinClasificar">Sin Clasificar (0)</button>
+                <button class="btn btn-filter filter-sin-clasificar" id="btnFilterSinClasificar">Sin Clasificar (300)</button>
             </div>
 
             <div class="action-buttons secondary">
@@ -214,7 +214,9 @@
     <!-- Toast Notification -->
     <div id="toast" class="toast"></div>
 
+    <!-- Scripts: photo-map.js debe cargarse ANTES de selector.js -->
     <script src="js/proteccion.js"></script>
+    <script src="js/photo-map.js"></script>
     <script src="js/selector.js"></script>
 
     <footer style="background: #333; color: white; text-align: center; padding: 20px; margin-top: 40px;">

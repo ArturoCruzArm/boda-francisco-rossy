@@ -1,25 +1,35 @@
 // ========================================
 // GLOBAL VARIABLES
 // ========================================
-// Load photo map (obfuscated filenames)
-let photoMap = {};
+// Generate photo paths for 300 photos using the PHOTO_MAP from photo-map.js
+// PHOTO_MAP is loaded from the external photo-map.js file
 let photos = [];
 let photosLoaded = false;
 
-// Function to load photo map
-async function loadPhotoMap() {
+// Function to load photo list from embedded PHOTO_MAP
+function loadPhotoMap() {
     try {
-        const response = await fetch('images/photo_map.json');
-        photoMap = await response.json();
-        // Generate photo paths using obfuscated names
-        photos = Array.from({length: 300}, (_, i) => `images/${photoMap[i]}`);
-        console.log('Photo map loaded:', photos.length, 'photos');
+        console.log('📸 Cargando mapa de fotos...');
+
+        // Check if PHOTO_MAP is available (loaded from photo-map.js)
+        if (typeof PHOTO_MAP === 'undefined') {
+            throw new Error('PHOTO_MAP no está definido. Asegúrate de cargar photo-map.js primero.');
+        }
+
+        // Generate photo paths using obfuscated names from map
+        const photoCount = Object.keys(PHOTO_MAP).length;
+        console.log('📊 Fotos encontradas en el mapa:', photoCount);
+
+        photos = Array.from({length: photoCount}, (_, i) => `images/${PHOTO_MAP[i]}`);
+        console.log('✅ Photo map cargado:', photos.length, 'fotos');
         photosLoaded = true;
         return true;
     } catch (error) {
-        console.error('Error loading photo map:', error);
-        // Fallback to old naming if map fails
+        console.error('❌ Error cargando photo map:', error);
+        console.error('⚠️ Asegúrate de que photo-map.js esté cargado antes de selector.js');
+        // Fallback: usar nombres secuenciales
         photos = Array.from({length: 300}, (_, i) => `images/foto${String(i + 1).padStart(4, '0')}.webp`);
+        console.log('⚠️ Usando fallback con nombres secuenciales');
         photosLoaded = true;
         return false;
     }
@@ -317,7 +327,7 @@ function isPhotoVisible(index) {
             show = !selection.ampliacion && !selection.impresion && !selection.redes_sociales && !selection.invitacion && !selection.descartada;
             break;
     }
-    console.log(`isPhotoVisible(index: ${index}, currentFilter: ${currentFilter}) => ${show}`);
+    // console.log(`isPhotoVisible(index: ${index}, currentFilter: ${currentFilter}) => ${show}`); // Comentado - demasiado verbose
     return show;
 }
 
@@ -667,21 +677,32 @@ function showToast(message, type = 'success') {
 // ========================================
 // EVENT LISTENERS
 // ========================================
-document.addEventListener('DOMContentLoaded', async () => {
-    // Load photo map FIRST
-    await loadPhotoMap();
+document.addEventListener('DOMContentLoaded', () => {
+    console.log('🎬 Iniciando carga del selector...');
+
+    // Load photo map FIRST (no longer async)
+    loadPhotoMap();
+    console.log('✅ Mapa de fotos cargado. Total fotos:', photos.length);
 
     // Load saved selections
+    console.log('💾 Cargando selecciones guardadas...');
     loadSelections();
+    console.log('✅ Selecciones cargadas:', Object.keys(photoSelections).length);
 
     // Render gallery AFTER photos are loaded
+    console.log('🖼️ Renderizando galería...');
     renderGallery();
+    console.log('✅ Galería renderizada');
 
     // Update stats
+    console.log('📊 Actualizando estadísticas...');
     updateStats();
+    console.log('✅ Estadísticas actualizadas');
 
     // Update filter buttons
+    console.log('🔘 Actualizando botones de filtro...');
     updateFilterButtons();
+    console.log('✅ Botones actualizados');
 
     // Filter buttons
     document.getElementById('btnFilterAll').addEventListener('click', () => setFilter('all'));
@@ -799,9 +820,9 @@ document.addEventListener('DOMContentLoaded', async () => {
         });
     }
 
-    console.log('Selector de fotos inicializado');
-    console.log(`Total de fotos: ${photos.length}`);
-    console.log('Selecciones cargadas:', photoSelections);
+    console.log('✅ ¡Selector de fotos inicializado correctamente!');
+    // console.log(`Total de fotos: ${photos.length}`); // Ya mostrado arriba
+    // console.log('Selecciones cargadas:', photoSelections); // Ya mostrado arriba
 });
 
 // ========================================
