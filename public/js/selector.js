@@ -9,7 +9,15 @@ let photosLoaded = false;
 // Function to load photo map
 async function loadPhotoMap() {
     try {
-        // Esperar a que el token esté listo
+        // Intentar usar PHOTO_LIST embebido en HTML (GitHub Pages)
+        if (typeof PHOTO_LIST !== 'undefined' && PHOTO_LIST.length > 0) {
+            console.log(`Cargadas ${PHOTO_LIST.length} imágenes desde lista embebida`);
+            photos = PHOTO_LIST;
+            photosLoaded = true;
+            return;
+        }
+
+        // Fallback: Esperar a que el token esté listo (servidor local)
         if (!auth || !auth.getToken()) {
             console.log('Esperando token de autenticación...');
             await new Promise(resolve => {
