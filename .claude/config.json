@@ -1,0 +1,65 @@
+{
+  "name": "Galería Segura Multi-Evento",
+  "description": "Sistema profesional de hosting para galerías de fotos protegidas",
+  "version": "1.0.0",
+  "repository": "https://github.com/ArturoCruzArm/boda-francisco-rossy",
+  "vps": {
+    "ip": "74.208.166.234",
+    "os": "Ubuntu 24.04",
+    "domain": "invitados.org"
+  },
+  "stack": {
+    "runtime": "Node.js v24.11.0",
+    "framework": "Express.js 4.18.2",
+    "webserver": "Nginx 1.24.0",
+    "ssl": "Let's Encrypt + Cloudflare DNS",
+    "dns": "Cloudflare"
+  },
+  "services": {
+    "backend": {
+      "port": 3000,
+      "service": "boda",
+      "logs": "/var/log/boda.log"
+    },
+    "web": {
+      "port": 80,
+      "port_https": 443,
+      "service": "nginx"
+    }
+  },
+  "features": [
+    "Multi-evento en un único VPS",
+    "Protección de imágenes con tokens",
+    "HTTPS/TLS 1.2+ automático",
+    "Renovación automática de certificados",
+    "Rate limiting y seguridad",
+    "System de tokens validados por IP",
+    "Bloqueo de DevTools",
+    "Prevención de descargas de imágenes",
+    "Grid responsive",
+    "Visualización a pantalla completa"
+  ],
+  "directories": {
+    "backend": "/opt/boda-francisco-rossy",
+    "events": "/opt/eventos",
+    "logs": "/var/log",
+    "nginx": "/etc/nginx/sites-available",
+    "ssl": "/etc/letsencrypt/live"
+  },
+  "commands": {
+    "create_event": "cd /opt/boda-francisco-rossy && ./deploy-event.sh <url> <event-id>",
+    "status": "systemctl status boda nginx",
+    "logs": "tail -f /var/log/boda.log",
+    "restart": "systemctl restart boda",
+    "list_events": "ls -la /opt/eventos/"
+  },
+  "documentation": {
+    "init": ".claude/init.md",
+    "readme": "README.md",
+    "admin": "ADMIN.md",
+    "cloudflare": "CLOUDFLARE.md",
+    "nuevos_repositorios": "NUEVOS_REPOSITORIOS.md",
+    "como_ver_fotos": "COMO_VER_FOTOS.md",
+    "setup_final": "SETUP_FINAL.txt"
+  }
+}
