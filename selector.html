@@ -5,9 +5,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Selector de Fotos - Boda de Francisco y Rossy</title>
     <link rel="icon" type="image/svg+xml" href="favicon.svg">
-    <link rel="stylesheet" href="css/selector.css">
-    <link rel="stylesheet" href="css/proteccion.css">
-    <link rel="stylesheet" href="css/music-player.css">
+    <!-- Estilos con versionado para evitar caché -->
+    <link rel="stylesheet" href="css/selector.css?v=1.1.0">
+    <link rel="stylesheet" href="css/proteccion.css?v=1.1.0">
+    <link rel="stylesheet" href="css/music-player.css?v=1.1.0">
     <link href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Playfair+Display:wght@400;700&family=Lato:wght@300;400;700&display=swap" rel="stylesheet">
 </head>
 <body>
@@ -215,11 +216,13 @@
     <!-- Toast Notification -->
     <div id="toast" class="toast"></div>
 
-    <!-- Scripts: photo-map.js debe cargarse ANTES de selector.js -->
-    <script src="js/proteccion.js"></script>
-    <script src="js/photo-map.js"></script>
-    <script src="js/music-player.js"></script>
-    <script src="js/selector.js"></script>
+    <!-- Scripts con versionado para evitar caché -->
+    <!-- IMPORTANTE: version.js debe cargarse PRIMERO -->
+    <script src="version.js?v=1.1.0"></script>
+    <script src="js/proteccion.js?v=1.1.0"></script>
+    <script src="js/photo-map.js?v=1.1.0"></script>
+    <script src="js/music-player.js?v=1.1.0"></script>
+    <script src="js/selector.js?v=1.1.0"></script>
 
     <footer style="background: #333; color: white; text-align: center; padding: 20px; margin-top: 40px;">
         <p>Producciones Foro 7</p>
