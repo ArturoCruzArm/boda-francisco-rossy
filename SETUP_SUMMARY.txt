@@ -1,0 +1,276 @@
+================================================================================
+✅ SETUP COMPLETADO - Sistema Multi-Evento Listo
+================================================================================
+
+📋 INFORMACIÓN DEL VPS
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+IP Pública:              74.208.166.234
+Sistema Operativo:       Ubuntu 24.04
+Kernel:                  6.8.0-86-generic
+
+🛠️ SERVICIOS INSTALADOS
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+✅ Node.js              v24.11.0 (/usr/local/bin/node)
+✅ npm                  11.6.1
+✅ Express.js           4.18.2
+✅ Nginx                1.24.0 (reverse proxy)
+✅ Let's Encrypt        2.9.0 (certbot) - Listo para SSL
+✅ Compression          1.7.4 (GZIP)
+✅ Helmet               7.0.0 (seguridad)
+✅ Rate Limiter         6.8.0 (protección)
+
+📁 DIRECTORIOS PRINCIPALES
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Backend:                /opt/boda-francisco-rossy/
+Eventos:                /opt/eventos/
+Nginx Config:           /etc/nginx/sites-available/eventos
+Logs:                   /var/log/boda.log
+SSL Certs (futuro):     /etc/letsencrypt/live/
+
+🎯 FUNCIONALIDADES IMPLEMENTADAS
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+1. MULTI-EVENTO
+   ✅ Arquitectura centralizada en un solo servidor Node.js
+   ✅ Múltiples eventos con dominios independientes
+   ✅ Aislamiento de datos por evento
+   ✅ Escalable a cientos de eventos
+
+2. PROTECCIÓN DE IMÁGENES
+   ✅ Sistema de tokens (1 hora de validez)
+   ✅ Validación por IP + User-Agent
+   ✅ Headers CSP (Content Security Policy)
+   ✅ Bloqueo de descarga local
+   ✅ Sin acceso directo a /images
+   ✅ Bloqueo de DevTools (F12, Ctrl+Shift+I, etc)
+   ✅ Sin clic derecho, sin arrastrar
+
+3. SEGURIDAD
+   ✅ Rate limiting: 100 req/15 min por IP
+   ✅ Bloqueo de User-Agents sospechosos (curl, wget, scrapy)
+   ✅ Directory traversal protection
+   ✅ HTTPS ready (SSL/TLS con Let's Encrypt)
+   ✅ HSTS headers
+   ✅ Helmet.js para headers de seguridad
+
+4. RENDIMIENTO
+   ✅ Compresión GZIP automática
+   ✅ Caching inteligente (assets vs API)
+   ✅ Nginx como reverse proxy eficiente
+   ✅ Keep-alive connections
+
+5. INFRAESTRUCTURA
+   ✅ Systemd service para auto-restart
+   ✅ Logging centralizado (/var/log/boda.log)
+   ✅ Nginx load balancing ready
+   ✅ Cloudflare CDN integration ready
+
+6. SCRIPTS Y HERRAMIENTAS
+   ✅ Deploy automático (deploy-event.sh)
+   ✅ Documentación completa (ADMIN.md, CLOUDFLARE.md)
+   ✅ Monitoreo de logs en tiempo real
+
+📦 ARCHIVOS CLAVES
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+/opt/boda-francisco-rossy/
+├── server.js                          # Servidor Express.js multi-evento
+├── package.json                       # Dependencias Node
+├── deploy-event.sh                   # Script despliegue automático
+├── ADMIN.md                          # Guía administración completa
+├── CLOUDFLARE.md                     # Configuración Cloudflare
+├── README.md                         # Documentación general
+├── SETUP_SUMMARY.txt                 # Este archivo
+├── public/
+│   ├── index.html                    # Página principal
+│   ├── js/
+│   │   ├── auth.js                   # Gestor de autenticación
+│   │   └── gallery.js                # Gestor de galería
+│   └── css/
+│       └── selector.css              # Estilos
+├── images/                           # Fotos evento actual
+├── node_modules/                     # Dependencias instaladas
+└── .git/                             # Repositorio Git
+
+/etc/nginx/sites-available/
+├── eventos                           # Config Nginx (multi-evento)
+
+/etc/systemd/system/
+├── boda.service                      # Servicio Node.js
+
+🚀 SERVICIOS EN EJECUCIÓN
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Comando para verificar:
+$ systemctl status boda nginx
+
+Estado esperado:
+✅ boda.service     - active (running)
+✅ nginx.service    - active (running)
+
+Puertos:
+- 3000: Express.js (interno, proxied por Nginx)
+- 80:   HTTP (Nginx)
+- 443:  HTTPS (Nginx) - Habilitado después de SSL
+
+🔑 PRÓXIMOS PASOS - MUY IMPORTANTE
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+1. CONFIGURAR CLOUDFLARE (Importante: Hacer AHORA)
+   
+   En https://dash.cloudflare.com:
+   
+   a) Ve a DNS → Registros
+   
+   b) Crea registro A:
+      Tipo:   A
+      Nombre: rossy-francisco (o @)
+      Valor:  74.208.166.234
+      Proxy:  OFF (Gris - "DNS Only")
+   
+   c) Crea alias www:
+      Tipo:   CNAME
+      Nombre: www
+      Valor:  rossy-francisco.invitados.org
+      Proxy:  OFF
+   
+   d) Espera 5-10 minutos para propagación DNS
+
+2. VERIFICAR DNS
+   
+   Comando:
+   $ nslookup rossy-francisco.invitados.org
+   
+   Debe devolver: 74.208.166.234
+
+3. OBTENER CERTIFICADO SSL
+   
+   Una vez DNS propagado (en el VPS):
+   $ certbot certonly --webroot -w /var/www/certbot \
+     -d rossy-francisco.invitados.org \
+     -d www.rossy-francisco.invitados.org \
+     -d '*.rossy-francisco.invitados.org' \
+     --agree-tos --email tu@email.com --non-interactive
+
+4. HABILITAR HTTPS EN NGINX
+   
+   Edita /etc/nginx/sites-available/eventos
+   Descomenta la sección # HTTPS
+   
+   Luego:
+   $ nginx -t
+   $ systemctl restart nginx
+
+5. COMENZAR A DESPLEGAR EVENTOS
+
+   Crear evento:
+   $ cd /opt/boda-francisco-rossy
+   $ ./deploy-event.sh https://github.com/usuario/evento evento-id
+   
+   Configurar en Cloudflare:
+   - Crear registro A: evento-id
+   - Valor: 74.208.166.234
+   - Proxy: OFF
+
+💻 COMANDOS ÚTILES
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+# Ver estado de servicios
+systemctl status boda
+systemctl status nginx
+
+# Ver logs en tiempo real
+tail -f /var/log/boda.log
+
+# Logs últimas 50 líneas
+tail -50 /var/log/boda.log
+
+# Monitorear imágenes servidas
+grep "\[IMAGE\]" /var/log/boda.log | tail -20
+
+# Monitorear intentos bloqueados
+grep "\[AUTH\].*inválido\|Bloqueado" /var/log/boda.log | tail -20
+
+# Reiniciar servicios
+systemctl restart boda nginx
+
+# Ver eventos creados
+ls -la /opt/eventos/
+
+# Crear nuevo evento
+/opt/boda-francisco-rossy/deploy-event.sh <git-url> <evento-id>
+
+# Test HTTP (desde otro VPS)
+curl -I http://rossy-francisco.invitados.org
+
+# Test HTTPS (una vez configurado)
+curl -I https://rossy-francisco.invitados.org
+
+📊 MONITOREO Y ESTADÍSTICAS
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+# Total de imágenes servidas
+grep "\[IMAGE\]" /var/log/boda.log | wc -l
+
+# Total de tokens generados
+grep "\[TOKEN\]" /var/log/boda.log | wc -l
+
+# Intentos fallidos
+grep "\[AUTH\].*inválido" /var/log/boda.log | wc -l
+
+# Por evento específico
+grep "evento-quince" /var/log/boda.log | wc -l
+
+🔒 SEGURIDAD - PROTECCIONES ACTIVAS
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+✅ Tokens únicos por sesión
+✅ Validación múltiple (IP + User-Agent)
+✅ Headers CSP (no inline scripts)
+✅ X-Frame-Options DENY (no iframes)
+✅ X-XSS-Protection habilitada
+✅ Content-Disposition: inline (no descarga)
+✅ No-cache headers (no cachear localmente)
+✅ Bloqueo DevTools
+✅ Bloqueo clic derecho en imágenes
+✅ Bloqueo arrastrar imágenes
+✅ Bloqueo atajos de teclado peligrosos
+✅ Rate limiting activo
+✅ Bloqueo User-Agents sospechosos
+✅ Directory traversal protection
+
+🐛 TROUBLESHOOTING
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Problema: No funciona HTTP
+→ Verificar: systemctl status boda nginx
+
+Problema: Imágenes no cargan
+→ Verificar: ls -la /opt/eventos/evento-id/images/
+→ Ver logs: tail -30 /var/log/boda.log | grep evento-id
+
+Problema: DNS no propaga
+→ Verificar en Cloudflare que Proxy: OFF
+→ Esperar 10-15 minutos
+→ Limpiar cache: sudo systemctl restart systemd-resolved
+
+Problema: Node.js crash
+→ Ver logs: journalctl -u boda -n 50
+→ Reiniciar: systemctl restart boda
+
+📞 INFORMACIÓN DE CONTACTO IMPORTANTE
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Backend logs:        /var/log/boda.log
+Nginx logs:          /var/log/nginx/
+Documentation:       /opt/boda-francisco-rossy/ADMIN.md
+Cloudflare guide:    /opt/boda-francisco-rossy/CLOUDFLARE.md
+
+================================================================================
+✨ SISTEMA LISTO PARA PRODUCCIÓN - ¡A CONFIGURAR CLOUDFLARE!
+================================================================================
+
+Fecha de Setup: 2025-10-28
+Versión:       1.0.0 Multi-Evento
+Estado:        ✅ ACTIVO Y FUNCIONANDO
+
+================================================================================

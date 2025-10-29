@@ -1,0 +1,34 @@
+name: Deploy to GitHub Pages
+
+on:
+  push:
+    branches:
+      - master
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Deploy to gh-pages
+        run: |
+          git config --global user.email "action@github.com"
+          git config --global user.name "GitHub Action"
+
+          # Crear/actualizar rama gh-pages con contenido de master
+          git fetch origin
+          git checkout gh-pages || git checkout --orphan gh-pages
+
+          # Copiar archivos necesarios desde master
+          git checkout master -- selector.html public/ images/ photo_map.json favicon.svg .nojekyll 2>/dev/null || true
+
+          # Adicionar cambios
+          git add .
+
+          # Commit si hay cambios
+          git diff-index --quiet HEAD || git commit -m "Deploy to GitHub Pages from master"
+
+          # Push a gh-pages
+          git push origin gh-pages
