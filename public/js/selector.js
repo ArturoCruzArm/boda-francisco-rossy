@@ -10,11 +10,11 @@ let photosLoaded = false;
 async function loadPhotoMap() {
     try {
         // Intentar usar PHOTO_LIST embebido en HTML (GitHub Pages)
-        if (typeof PHOTO_LIST !== 'undefined' && PHOTO_LIST.length > 0) {
+        if (typeof PHOTO_LIST !== 'undefined' && Array.isArray(PHOTO_LIST) && PHOTO_LIST.length > 0) {
             console.log(`Cargadas ${PHOTO_LIST.length} imágenes desde lista embebida`);
             photos = PHOTO_LIST;
             photosLoaded = true;
-            return;
+            return true;
         }
 
         // Fallback: Esperar a que el token esté listo (servidor local)
