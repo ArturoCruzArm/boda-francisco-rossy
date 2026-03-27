@@ -9,7 +9,6 @@ let photosLoaded = false;
 // Function to load photo list from embedded PHOTO_MAP
 function loadPhotoMap() {
     try {
-        console.log('📸 Cargando mapa de fotos...');
 
         // Check if PHOTO_MAP is available (loaded from photo-map.js)
         if (typeof PHOTO_MAP === 'undefined') {
@@ -18,10 +17,8 @@ function loadPhotoMap() {
 
         // Generate photo paths using obfuscated names from map
         const photoCount = Object.keys(PHOTO_MAP).length;
-        console.log('📊 Fotos encontradas en el mapa:', photoCount);
 
         photos = Array.from({length: photoCount}, (_, i) => `images/${PHOTO_MAP[i]}`);
-        console.log('✅ Photo map cargado:', photos.length, 'fotos');
         photosLoaded = true;
         return true;
     } catch (error) {
@@ -29,7 +26,6 @@ function loadPhotoMap() {
         console.error('⚠️ Asegúrate de que photo-map.js esté cargado antes de selector.js');
         // Fallback: usar nombres secuenciales
         photos = Array.from({length: 300}, (_, i) => `images/foto${String(i + 1).padStart(4, '0')}.webp`);
-        console.log('⚠️ Usando fallback con nombres secuenciales');
         photosLoaded = true;
         return false;
     }
@@ -55,7 +51,6 @@ function loadSelections() {
         const saved = localStorage.getItem(STORAGE_KEY);
         if (saved) {
             photoSelections = JSON.parse(saved);
-            console.log('Selecciones cargadas desde localStorage:', photoSelections);
         }
     } catch (error) {
         console.error('Error cargando selecciones:', error);
@@ -66,7 +61,6 @@ function loadSelections() {
 function saveSelections() {
     try {
         localStorage.setItem(STORAGE_KEY, JSON.stringify(photoSelections));
-        console.log('Selecciones guardadas en localStorage');
     } catch (error) {
         console.error('Error guardando selecciones:', error);
         showToast('Error al guardar. Verifica el espacio del navegador.', 'error');
@@ -341,7 +335,6 @@ function applyFilter() {
 }
 
 function setFilter(filter) {
-    console.log('Setting filter to:', filter);
     currentFilter = filter;
     applyFilter();
 
@@ -395,7 +388,6 @@ function findNextVisiblePhoto(startIndex, direction) {
 // MODAL FUNCTIONS
 // ========================================
 function openModal(index) {
-    console.log(`Opening modal for index: ${index}, currentFilter: ${currentFilter}`);
     currentPhotoIndex = index;
     const modal = document.getElementById('photoModal');
     const modalImage = document.getElementById('modalImage');
@@ -463,12 +455,10 @@ function hasUnsavedChanges() {
 }
 
 function navigatePhoto(direction) {
-    console.log(`Navigating photo: ${direction}`);
     if (currentPhotoIndex === null) return;
 
     const proceed = () => {
         const newIndex = findNextVisiblePhoto(currentPhotoIndex, direction);
-        console.log(`findNextVisiblePhoto returned: ${newIndex}`);
 
         if (newIndex !== null) {
             currentPhotoIndex = newIndex;
@@ -644,16 +634,7 @@ function copyToClipboard() {
     navigator.clipboard.writeText(summary).then(() => {
         showToast('Resumen copiado al portapapeles', 'success');
     }).catch(() => {
-        // Fallback for older browsers
-        const textarea = document.createElement('textarea');
-        textarea.value = summary;
-        textarea.style.position = 'fixed';
-        textarea.style.opacity = '0';
-        document.body.appendChild(textarea);
-        textarea.select();
-        document.execCommand('copy');
-        document.body.removeChild(textarea);
-        showToast('Resumen copiado al portapapeles', 'success');
+        showToast('No se pudo copiar. Selecciona el texto manualmente.', 'error');
     });
 }
 
@@ -678,31 +659,21 @@ function showToast(message, type = 'success') {
 // EVENT LISTENERS
 // ========================================
 document.addEventListener('DOMContentLoaded', () => {
-    console.log('🎬 Iniciando carga del selector...');
 
     // Load photo map FIRST (no longer async)
     loadPhotoMap();
-    console.log('✅ Mapa de fotos cargado. Total fotos:', photos.length);
 
     // Load saved selections
-    console.log('💾 Cargando selecciones guardadas...');
     loadSelections();
-    console.log('✅ Selecciones cargadas:', Object.keys(photoSelections).length);
 
     // Render gallery AFTER photos are loaded
-    console.log('🖼️ Renderizando galería...');
     renderGallery();
-    console.log('✅ Galería renderizada');
 
     // Update stats
-    console.log('📊 Actualizando estadísticas...');
     updateStats();
-    console.log('✅ Estadísticas actualizadas');
 
     // Update filter buttons
-    console.log('🔘 Actualizando botones de filtro...');
     updateFilterButtons();
-    console.log('✅ Botones actualizados');
 
     // Filter buttons
     document.getElementById('btnFilterAll').addEventListener('click', () => setFilter('all'));
@@ -820,7 +791,6 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    console.log('✅ ¡Selector de fotos inicializado correctamente!');
     // console.log(`Total de fotos: ${photos.length}`); // Ya mostrado arriba
     // console.log('Selecciones cargadas:', photoSelections); // Ya mostrado arriba
 });
@@ -830,7 +800,6 @@ document.addEventListener('DOMContentLoaded', () => {
 // ========================================
 document.addEventListener('visibilitychange', () => {
     if (document.hidden) {
-        console.log('Página oculta - guardando selecciones...');
         saveSelections();
     }
 });
